@@ -1,0 +1,1032 @@
+{% extends 'dosmobi.html' %}
+{% load staticfiles %}
+{% load dosfilter %}
+
+<!— 标题  -->
+{% block title %}
+极度认真的2019
+{% endblock %}
+
+<!— css  -->
+{% block mycss %}
+
+<!-- JEUI 日历 -->
+<link type="text/css" rel="stylesheet" href="{% static 'jeDate/skin/jedate.css' %}">
+<script type="text/javascript" src="{% static 'jeDate/src/jedate.js' %}"></script>
+
+<!— bootstrapSwitch 的CSS文件 -->
+<link rel="stylesheet" href="{% static 'bootstrap/bootstrapSwitch.css' %}">
+
+<style>
+blockquote {
+    height: 25px;
+    line-height: 25px;
+    font-size: 15px;
+    font-weight: bold;
+    background-image: url("/static/icon/target.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 10px 5px;
+    padding-left: 35px;
+}
+
+.w-e-text blockquote {
+    background-image: none;
+}
+
+.slogan{
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFB300;
+    text-align: center;
+    line-height: 40px;
+    margin: 0px 5px;
+}
+
+</style>
+{% endblock %}
+
+<!— 顶部导航  -->
+{% block topnav %}
+   <div class="je-navs-inverse je-bg-green je-rdu3 je-f16 show" style="display: flex; width: 100%;margin: 0px">
+        <li class="item item2 {% ifequal mid '1' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=0&mid=1&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">1</a>
+        </li>
+        <li class="item item2 {% ifequal mid '2' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=3&mid=2&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">2</a>
+        </li>
+        <li class="item item2 {% ifequal mid '3' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=2019&mid=3&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">3</a>
+        </li>
+        <li class="item item2 {% ifequal mid '4' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=0&mid=4&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">4</a>
+        </li>
+        <li class="item item2 {% ifequal mid '5' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=2019&&mid=5&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">5</a>
+        </li>
+         <li class="item item2 {% ifequal mid '6' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=2019&mid=6&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">6</a>
+        </li>
+        <li class="item item2 {% ifequal mid '7' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=0&mid=7&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">7</a>
+        </li>
+        <li class="item item2 {% ifequal mid '8' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=2019&mid=8&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">8</a>
+        </li>
+        <li class="item item2 {% ifequal mid '9' %}on{% endifequal %}">
+            <a style="text-decoration: none" href="{% url '2019' %}?fid=2019&mid=9&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}">9</a>
+        </li>
+   </div>
+
+{#登录对话框#}
+<div class="doslogin">
+
+<form action="{% url '2019' %}?login=login" method="post" enctype="multipart/form-data" class="y center" style="height: 100%">
+{% csrf_token %}
+
+    <p class="b white l" style="text-align: left">请输入密码：</p>
+    <input id="password" required name="password" type="password" placeholder="{{ msg }}">
+    <p></p>
+
+    <div class="x">
+        <button id="canclelogin" type="button" class="bg-grey" >取消</button>
+        <button id="login" type="submit">登录</button>
+    </div>
+
+</form>
+
+</div>
+
+{#半透明遮罩-悬浮-出现登录对话框时出现#}
+<div id="mask" class="mask">
+</div>
+
+<!-- 新增按钮 -->
+{% ifequal mid mymid  %}
+
+{% ifequal tab '年'  %}
+    {% ifequal ps '年度计划'  %}
+    <button id="show_editplanform" class="je-btn je-bg-orange je-rdu rbfloat" style="height: 40px; width: 40px;right:25px">改</button>
+    {% endifequal %}
+
+    {% ifequal ps '年终总结'  %}
+    <button id="show_editsumform"  class="je-btn je-bg-orange je-rdu rbfloat" style="height: 40px; width: 40px;right:25px ">改</button>
+    {% endifequal %}
+{% endifequal %}
+
+{% ifequal tab '月'  %}
+    <img id="addgoal" src='{% static '\icon\add.png' %}' class="rbfloat" style="cursor: pointer;right: 20px;bottom: 80px">
+    <img id="edit" src='{% static '\icon\edit.png' %}' class="rbfloat" style="cursor: pointer;width: 40px;height: 40px;bottom:160px;  right:25px" >
+{% endifequal %}
+
+{% ifequal tab '日'  %}
+<img  id="add" src='{% static '\icon\add.png' %}' class="rbfloat show" style="cursor: pointer;right: 20px;bottom: 80px;z-index: 99">
+<img id="edit" src='{% static '\icon\edit.png' %}' class="rbfloat show" style="cursor: pointer;width: 40px;height: 40px;right: 25px;bottom:160px;z-index: 99" >
+{% endifequal %}
+
+{% endifequal %}
+
+{% endblock %}
+
+<!— 主体内容 - 有5px内边距  -->
+{% block content %}
+
+{% ifequal tab '年' %}
+{# 导航-梦想现状、年度目标、年终总结#}
+<div class="x m5" >
+   <li style="line-height: 30px" class="nav{% ifequal ps '年度计划'  %} nav_active {% endifequal %}" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&tag={{tag}}&date={{date}}&ps=年度计划','_self');"> 2019 年度计划 - {{ name }}</li>
+
+{#   <li style="line-height: 30px" class="nav{% ifequal ps '年终总结'  %} nav_active {% endifequal %}" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&tag={{tag}}&date={{date}}&ps=年终总结','_self');">2019年终总结</li>#}
+</div>
+
+        {#详情-年度计划/总结#}
+        {% for p in planlist %}
+            {% ifequal ps '年度计划'  %}
+                <div id="plan" style="white-space:pre-wrap;">{{ p.plan | safe }}</div>
+            {% endifequal %}
+
+            <!-- 修改计划-->
+            <form id="saveplan"  action="{% url "2019" %}?action=editplan&fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}" style="display: none;" method="post">
+              {% csrf_token %}
+            
+            <textarea id="text1" name="plan" hidden></textarea>
+            <div id="editor1" style="width:100%;" ><p>{{ p.plan | safe }}</p></div>
+            <script type="text/javascript" src="static/js/wangEditor.min.js"></script>
+            <script type="text/javascript">
+                var E = window.wangEditor
+                var editor = new E('#editor1')
+            
+                // 配置服务器图片上传接口   uploadsimg
+                editor.customConfig.uploadImgServer = '/uploadsimg'
+            
+                // 相当于表单里文件控件的 name='fileVal'
+                editor.customConfig.uploadFileName = 'fileVal'
+            
+                editor.customConfig.zIndex = 0
+                // 自定义菜单配置
+                editor.customConfig.menus = [
+                'quote',  // 引用
+                'foreColor',  // 文字颜色
+                'fontSize',  // 字号
+                'bold',  // 粗体
+                'justify',  // 对齐方式
+                'redo',  // 重复
+                'list',  // 列表
+                'link',  // 插入链接
+                'table',  // 表格
+                 'image',  // 插入图片
+                'video',  // 插入视频
+                ]
+            
+                var $text1 = $('#text1')
+                editor.customConfig.onchange = function (html) {
+                    // 监控变化，同步更新到 textarea
+                    $text1.val(html)
+                }
+                editor.create()
+                // 初始化 textarea 的值
+                $text1.val(editor.txt.html())
+            </script>
+            
+            <div class="x xcenter">
+            <button style="margin: 10px 40px" type="button" class="je-btn je-bg-native" id="cancelp">取消</button>
+            <button style="margin: 10px 40px" type="submit" class="je-btn je-bg-green" id="savep">保存</button>
+            </div>
+            </form>
+
+            {% ifequal ps '年终总结'  %}
+                <div id="sum" style="white-space:pre-wrap;">{{ p.summary| safe }}</div>
+            {% endifequal %}
+
+
+            <!-- 修改总结-->
+            <form id="savesum"  action="{% url "2019" %}?action=editsum&fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}" style="display: none;" method="post">
+              {% csrf_token %}
+            
+            <textarea id="text2" name="summary" hidden></textarea>
+            <div id="editor2" style="width:100%;" ><p>{{ p.summary | safe }}</p></div>
+            <script type="text/javascript" src="static/js/wangEditor.min.js"></script>
+            <script type="text/javascript">
+                var E = window.wangEditor
+                var editor = new E('#editor2')
+            
+                // 配置服务器图片上传接口   uploadsimg
+                editor.customConfig.uploadImgServer = '/uploadsimg'
+            
+                // 相当于表单里文件控件的 name='fileVal'
+                editor.customConfig.uploadFileName = 'fileVal'
+            
+                editor.customConfig.zIndex = 0
+                // 自定义菜单配置
+                editor.customConfig.menus = [
+                'quote',  // 引用
+                'foreColor',  // 文字颜色
+                'fontSize',  // 字号
+                'bold',  // 粗体
+                'justify',  // 对齐方式
+                'redo',  // 重复
+                'list',  // 列表
+                'link',  // 插入链接
+                'table',  // 表格
+                 'image',  // 插入图片
+                'video',  // 插入视频
+                ]
+            
+                var $text2 = $('#text2')
+                editor.customConfig.onchange = function (html) {
+                    // 监控变化，同步更新到 textarea
+                    $text2.val(html)
+                }
+                editor.create()
+                // 初始化 textarea 的值
+                $text2.val(editor.txt.html())
+            </script>
+            
+            <div class="x xcenter">
+            <button style="margin: 10px 40px" type="button" class="je-btn je-bg-native" id="cancels">取消</button>
+            <button style="margin: 10px 40px" type="submit" class="je-btn je-bg-green" id="saves">保存</button>
+            </div>
+            </form>     
+            
+        {% endfor %}
+
+<script>
+$("#show_editplanform").click(function(){
+    $("#plan").slideToggle();
+    $("#show_editplanform").slideToggle();
+    $("#saveplan").slideToggle();
+    $("#topnav").slideToggle();
+});
+
+$("#cancelp").click(function(){
+    $("#plan").slideToggle();
+    $("#show_editplanform").slideToggle();
+    $("#saveplan").slideToggle();
+    $("#topnav").slideToggle();
+});
+
+$("#show_editsumform").click(function(){
+    $("#sum").slideToggle();
+    $("#show_editsumform").slideToggle();
+    $("#savesum").slideToggle();
+    $("#topnav").slideToggle();
+});
+
+$("#cancels").click(function(){
+    $("#sum").slideToggle();
+    $("#show_editsumform").slideToggle();
+    $("#savesum").slideToggle();
+    $("#topnav").slideToggle();
+});
+</script>
+{% endifequal %}
+
+{% ifequal tab '月' %}
+    {#日期导航#}
+     <div style="width: 100%;text-align: center;line-height: 50px;font-weight: bold;font-size: 18px;display: flex;flex-direction: row; " >
+        <div style="flex-grow:1;"><a style="text-decoration: none" href="{% url '2019' %}?fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}&go=last">< </a> </div>
+        <div style="flex-grow:1;"> {{year}}年 </div>
+         <div style="flex-grow:1;">{{month}}月  </div>
+         <div style="flex-grow:1;"> <a style="text-decoration: none" href="{% url '2019' %}?fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}&go=next">></a></div>
+     </div>
+
+    <div style="display: flex;justify-content: center;margin-bottom: 10px">
+        <div><span class="je-btn je-bg-orange je-rdu">{{name}}的目标</span></div>
+    </div>
+
+    {#新增目标表单#}
+    <form id="addgoalform" action="{% url '2019' %}?action=addgoal&fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}" method="post" style="margin-bottom:10px;display: none ">
+    {% csrf_token %}
+
+        <input required autofocus style="width: 100%" type="text" name="newgoal" placeholder="请输入新增目标" >
+
+        <div style="display:flex;justify-content: center">
+            <div>
+                <button id="cancleaddgoal"  class="je-btn" style="cursor: pointer;color: white; background: #bfbfbf ">取消 </button>
+                <button type="submit"  class="je-btn" style="cursor: pointer; color: white; background: green">保存</button>
+            </div>
+        </div>
+    </form>
+
+    {#修改目标表单#}
+    <form id="changegoalform" action="{% url '2019' %}?action=changegoal&fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}" method="post" style="margin-bottom:10px;display: none ">
+    {% csrf_token %}
+
+         <input style="width: 100%" required autofocus type="text" id="changegoalinput" name="changedgoal" placeholder="{{ goal }}" >
+         <input hidden type="text" id="G_id" name="G_id">
+
+        <div style="display:flex;justify-content: center">
+            <div>
+                <button id="canclechangegoal" type="button"   class="je-btn" style="cursor: pointer;color: white; background: #bfbfbf ">取消 </button>
+                <button type="submit"  class="je-btn" style="cursor: pointer; color: white; background: green">保存</button>
+            </div>
+        </div>
+    </form>
+
+    {# 目标清单#}
+    <div style="display: flex;flex-flow:column;" >
+        {% for f in goallist %}
+
+            <div style="display: flex;flex-direction: row; align-items: center; margin: 5px;flex-grow:1;width:100%;height: 20px">
+
+
+                <div id="check{{ f.id }}"  {% ifequal mid mymid  %} onclick="window.open('{% url '2019' %}?action=checkgoal&G_id={{f.id}}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}','_self');"  {% endifequal %} style="display: flex;justify-content:center;">
+                    {% ifequal f.done False %}
+                     <i class="je-icon je-green je-f30">&#xe68f;</i>
+                     {% else %}
+                     <i class="je-icon je-green je-f30">&#xe690;</i>
+                     {% endifequal %}
+                </div>
+
+                <div style="display: flex;justify-content:center;">
+                    <span style="font-size: 14px;height: 15px;line-height: 15px;margin-left: 5px" >{{f.goal}}</span>
+                </div>
+
+                <!-- 删除按钮 -->
+                <a id="del{{f.id}}"><button class="je-btn je-bg-red je-rdu minibnt" >×</button></a>
+                <!-- 修改按钮 -->
+                <a id="changegoal{{f.id}}" name="{{ f.goal }}" ><button class="je-btn je-bg-native je-rdu minibnt" style="font-size: 12px">改</button></a>
+
+            </div>
+
+            <script type="text/javascript">
+            $("#changegoal{{f.id}}").click(function(){
+            $("#changegoalinput").val($("#changegoal{{f.id}}").attr("name"));
+            $("#G_id").val({{ f.id }});
+            $("#changegoalform").slideDown();
+            });
+
+            jeui.use(["jquery","jeBox",],function () {
+
+            $("#del{{f.id}}").on("click",function(){
+                jeBox.msg('删除？', {
+                    time: 0 ,
+                    boxSize: ["auto", "110px"],
+                    button: [
+                        {
+                            name: '确定',
+
+                            callback:function(index){
+            window.location.href='{% url '2019' %}?action=delgoal&G_id={{f.id}}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}'
+                            }
+                        },{
+                            name: '取消'
+                        }
+                    ],
+                    boxStyle:{
+                        background:"#333",  border:"1px solid #333",
+                        "border-radius":"4px", color:"#fff",opacity:"0.93",
+                        filter:"alpha(opacity=90)",
+                        width:"200px",
+                        height:"100px",
+                    }
+                });
+            })
+            })
+
+            </script>
+
+        {% endfor %}
+    </div>
+
+<script>
+$("#edit").click(function(){
+    $(".minibnt").slideToggle();
+});
+
+$("#addgoal").click(function(){
+    $("#addgoalform").slideDown();
+});
+
+$("#cancleaddgoal").click(function(){
+    $("#addgoalform").slideUp();
+});
+
+$("#canclechangegoal").click(function(){
+    $("#changegoalform").slideUp();
+});
+</script>
+
+{% endifequal %}
+
+{% ifequal tab '日' %}
+<!-- 顶部信息 -->
+<div style="margin-top: 20px" class="x" id="showcalendar">
+    <!-- 天气 -->
+    <div style="margin-left: -73px;">
+        <iframe allowtransparency="true" frameborder="0" width="216" height="64" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=3&t=1&v=2&d=1&bd=0&k=&f=&ltf=009944&htf=cc0000&q=0&e=1&a=1&c=54511&w=255&h=64&align=center"></iframe>
+    </div>
+
+    <!-- 日期 -->
+    <div style="position: relative;margin-left: 50px"  >
+        <img src="{% static 'dosjh/images/日历.jpg' %}" height="60px">
+        <span style="position:absolute;top:10px;width:100%;text-align: center;font-weight: bold;font-size: 1px;color: white">{{ year }}年{{ month }}月</span>
+        <span style="position:absolute;top:17px;width:100%;text-align: center;font-weight: bold;font-size: 27px;color: crimson">{{ day }}</span>
+    </div>
+
+    <!-- 星期 -->
+    <div style="font-weight: bold;color: black;text-align: center;align-items: center;line-height: 25px;margin: 5px 12px;color: #315BA8">
+    {{ cweekday }}
+        <br>
+    今年第{{ mydate2| date:"z" }}天
+    </div>
+</div>
+
+<!-- 日历 -->
+<div  class="x xcenter m10 show" >
+<div id="show01" style="display: none" value="{{ date }}"></div>
+</div>
+
+{#顶部导航-昨天、今天、明天#}
+<div style="margin-top: -13px">
+
+<p  class="slogan show copy"  data-clipboard-text="{{ slogan }}" {% if slogan_nums > 28 %}  style="text-align: left" {% endif %}>{{ slogan }}</p>
+
+<div class="show je-navs-inverse je-bg-green je-rdu3 je-f14" >
+<div class="x">
+   <li class="item item2  {% ifequal tag '昨天'  %} on {% endifequal %}"><a style="text-decoration: none" href="{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag=昨天&type={{ type }}">昨天</a></li>
+   <li class="item item2 {% ifequal tag '今天'  %} on {% endifequal %}"><a style="text-decoration: none" href="{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag=今天&type={{ type }}">今天</a></li>
+   <li class="item item2 {% ifequal tag '明天'  %} on {% endifequal %}"><a style="text-decoration: none" href="{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag=明天&type={{ type }}">明天</a></li>
+</div>
+</div>
+</div>
+
+{#顶部导航—待办、日程#}
+<div>
+<div class="x other">
+   <li style="line-height: 30px" class="nav{% ifequal type '日程'  %} nav_active {% endifequal %}" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type=日程','_self');">日程</li>
+
+   <li style="line-height: 30px" class="nav{% ifequal type '待办'  %} nav_active {% endifequal %}" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type=待办','_self');">待办</li>
+</div>
+</div>
+
+{#新增表单-日程，待办#}
+<div id="addform" style="display: none">
+{% ifequal type '日程'  %}
+
+    <form action="{% url '2019' %}?action=add&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}" method="post" style="line-height: 40px; " >
+    {% csrf_token %}
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input name="start_time" type="datetime-local" class="dosinput" value="{{ datestart}}" > <div style="width: 30px">开始</div></div>
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input name="stop_time" required type="datetime-local" class="dosinput" value="{{ datestop }}" > <div style="width: 30px">截止</div></div>
+
+{% else %}
+    <form action="{% url '2019' %}?action=add&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}" method="post" style="line-height: 40px;" >
+    {% csrf_token %}
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input name="stop_time" required type="datetime-local" class="dosinput" value="{{ datestop }}" > <div style="width: 30px">截止</div></div>
+
+{% endifequal %}
+
+    <div class="x"><i class="je-icon je-blue je-f30">&#xe63f;</i><input name="work" required type="text" placeholder="干啥？" class="dosinput"></div>
+    <div class="x lr ycenter">
+        <div>
+           <i class="je-icon je-orange je-f30">&#xe60e;</i><input name="money" type="number" placeholder="0" class="dosinput" value="0" style="width: 60px"> 元
+        </div>
+
+{% ifequal type '日程'  %}
+        <div class="je-f14 checkbox x ycenter">
+            <input type="checkbox" name="if_day" jename="checkbox" jetext="每天">
+        </div>
+{% endifequal %}
+
+        <div class="switch" style="border: none;line-height: 40px" data-on-label="重要" data-off-label="不重要" data-on="danger">
+            <input name="if_important" type="checkbox" checked />
+        </div>
+
+
+    </div>
+    <div class="x" style="display: none"> <i class="je-icon je-red je-f30">&#xe60d;</i>  <input name="remind_time" type="datetime-local" class="dosinput"  value="{{ dateremind }}"> <div style="width: 30px">提醒</div></div>
+
+    <div style="display:flex;justify-content: center;margin: 20px 0px" >
+        <div>
+            <button id="cancle"  type="button"  class="je-btn" style="cursor: pointer;color: white; background: #bfbfbf;margin-right: 30px ">取消 </button>
+            <button type="submit"  class="je-btn" style="cursor: pointer; color: white; background: green">保存</button>
+        </div>
+    </div>
+</form>
+</div>
+
+{#修改表单#}
+<div id="editform" style="display: none">
+{% ifequal type '日程'  %}
+
+    <form action="{% url '2019' %}?action=edit&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}" method="post" style="line-height: 40px; " >
+    {% csrf_token %}
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input  id="new_start_time" name="start_time" type="datetime-local" class="dosinput" value="{{ today | date:"Y-m-d\TH:i"}}" > <div style="width: 30px">开始</div></div>
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input  id="new_stop_time" name="stop_time"  required type="datetime-local" class="dosinput" value="{{ today | date:"Y-m-d\TH:i" }}" > <div style="width: 30px">截止</div></div>
+
+{% else %}
+    <form action="{% url '2019' %}?action=edit&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}" method="post" style="line-height: 40px;" >
+    {% csrf_token %}
+
+        <div class="x"><i class="je-icon je-green je-f30">&#xe61b;</i><input id="new_stop_time" name="stop_time" required type="datetime-local" class="dosinput" value="{{ tomorrow | date:"Y-m-d\TH:i" }}" > <div style="width: 30px">截止</div></div>
+
+{% endifequal %}
+
+    <input type="text"  hidden id="id" name="id">
+
+    <div class="x"><i class="je-icon je-blue je-f30">&#xe63f;</i><input id="new_work" name="work" required type="text" placeholder="干啥？" class="dosinput"></div>
+    <div class="x lr">
+        <div>
+           <i class="je-icon je-orange je-f30">&#xe60e;</i><input id="new_money" name="money" type="number" placeholder="0" class="dosinput" value="0" style="width: 60px"> 元
+        </div>
+
+        <div class="switch" id="new_if_important" style="border: none;line-height: 40px" data-on-label="重要" data-off-label="不重要" data-on="danger">
+            <input name="if_important" type="checkbox" checked />
+        </div>
+    </div>
+    <div class="x" style="display: none"> <i class="je-icon je-red je-f30">&#xe60d;</i>  <input id="new_remind_time" name="remind_time" type="datetime-local" class="dosinput"  value="{{ remindtime | date:"Y-m-d\TH:i" }}"> <div style="width: 30px">提醒</div></div>
+
+    <div style="display:flex;justify-content: center">
+        <div>
+            <button id="cancle_edit"  type="button"  class="je-btn" style="cursor: pointer;color: white; background: #bfbfbf;margin-right: 30px  ">取消 </button>
+            <button type="submit"  class="je-btn" style="cursor: pointer; color: white; background: green">保存</button>
+        </div>
+    </div>
+</form>
+</div>
+
+<div class="show">
+
+{#待办#}
+{% ifequal type '待办'  %}
+    {% for i in todolist %}
+<div class="y">
+                <div class="x ycenter" >
+
+                <div id="check{{ i.id }}"  {% ifequal mid mymid  %} onclick="window.open('{% url '2019' %}?action=check&id={{i.id}}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}','_self');"  {% endifequal %} >
+                    {% ifequal i.done False %}
+                     <i class="je-icon je-green je-f30" style="display: flex; align-items: center;">&#xe68f; <span style="color: grey;font-size: 13px;">{{ i.stop_time }}&ensp;{{ i.stop_time | week }}&ensp;</span></i>
+                     {% else %}
+                     <i class="je-icon je-green je-f30" style="display: flex; align-items: center;">&#xe690;<span style="color: grey;font-size: 13px;">{{ i.stop_time }}&ensp;{{ i.stop_time | week }}&ensp;</span></i>
+                     {% endifequal %}
+                </div>
+
+                <!-- 操作按钮 -->
+                <div>
+                    <!-- 删除按钮 -->
+                    <button id="del{{i.id}}" class="je-btn je-bg-red je-rdu minibnt" style="margin:0 2px">×</button>
+
+                    <!-- 删除对话框 -->
+                    <div  id="delbox{{i.id}}"  class="delbox">
+                        <div style="height: 50px">删除？</div>
+                        <div class="x" style="justify-content: flex-end ">
+                        <div id="yes{{i.id}}" class="boxbnt" >确定</div>
+                        <div id="no{{i.id}}" class="boxbnt"  style="background: gainsboro; color: black">取消</div>
+                        </div>
+                    </div>
+
+                    <!-- 删除的js -->
+                    <script>
+                    $("#del{{i.id}}").on("click",function() {
+                        $("#delbox{{i.id}}").show();
+                    })
+
+                    $("#yes{{i.id}}").on("click",function() {
+                         window.location.href='{% url '2019' %}?action=del&id={{ i.id }}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}';
+                    })
+
+                    $("#no{{i.id}}").on("click",function() {
+                        $("#delbox{{i.id}}").hide();
+                    })
+                    </script>
+
+                    <!-- 修改按钮 -->
+                    <button id="edit{{i.id}}" class="je-btn je-bg-native je-rdu minibnt" style="font-size: 10px;margin:0 2px">改</button>
+
+                    <!-- 入日程 按钮  -->
+                    <button id="save{{i.id}}" class="je-btn je-bg-green je-rdu minibnt" style="font-size: 10px;margin:0 2px">日程</button>
+
+                    <!-- 修改的js -->
+                    <script>
+                    $("#save{{i.id}}").on("click",function() {
+                         window.location.href='{% url '2019' %}?action=save&id={{ i.id }}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}';
+                    })
+
+                    $("#edit{{i.id}}").click(function(){
+                        $("#addform").slideUp();
+                        $("#editform").slideDown();
+                        $("#id").attr("value",{{ i.id }});
+                        $("#new_stop_time").attr("value",'{{ i.stop_time| date:"Y-m-d\TH:i" }}');
+                        $("#new_work").attr("value",'{{ i.work }}');
+                        $("#new_money").attr("value",{{ i.money }});
+                        $("#new_remind_time").attr("value",'{{ i.remind_time| date:"Y-m-d\TH:i" }}');
+
+                        {% ifequal i.if_important 1 %}
+                            $('#new_if_important').bootstrapSwitch('setState', true);
+                        {% else %}
+                            $('#new_if_important').bootstrapSwitch('setState', false);
+                        {% endifequal %}
+                    });
+
+                    $("#cancle_edit").click(function(){
+                        $("#editform").slideUp();
+                            $("#showcalendar").slideDown();
+                    });
+                    </script>
+                </div>
+
+                </div>
+
+    <div class="x ycenter" style="line-height:20px;flex-flow: wrap;margin-left: 25px">
+
+                <div class="x">
+                    {% ifequal i.if_important 1 %}
+                    <div style="font-weight: bold;color:crimson "> <i class='je-icon je-red ' style="font-size: 20px;margin-right: 5px">&#xe612;</i>{{ i.work }} <span style="color: black">，{{ i.money }}元</span> </div>
+                    {% else %}
+                     <span style="font-weight: bold;color: rgba(14,14,48,0.87)">{{ i.work }}</span>，{{ i.money }}元
+                    {% endifequal %}
+                </div>
+
+    </div>
+</div>
+    {% endfor %}
+
+<div class="m5" style="margin-top: 30px">合计 {{ totalmoneytodo }} 元</div>
+
+{% else %}
+
+{#今日日程列表#}
+{% for i in list %}
+
+<div class="y">
+    <div class="x" style="flex-wrap: wrap">
+        <div id="check{{ i.id }}"  {% ifequal mid mymid  %} onclick="window.open('{% url '2019' %}?action=check&id={{i.id}}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}','_self');"  {% endifequal %}  style="line-height:40px;flex-flow: wrap ">
+            {% ifequal i.done False %}
+             <i class="je-icon je-green je-f30">&#xe68f;</i>
+             {% else %}
+             <i class="je-icon je-green je-f30">&#xe690;</i>
+             {% endifequal %}
+
+            <!-- {{ i.start_time| date:"H:i" }} - {{ i.stop_time| date:"H:i" }} -->
+
+<!--             {% ifequal i.if_important 1 %}
+            <i class='je-icon je-red je-f30'>&#xe612;</i>
+            {% else %}
+            <div  style="margin-left: 30px"></div>
+            {% endifequal %} -->
+<span>{{ i.work }}</span>
+            {% ifequal i.money 0 %}
+             {% else %}
+             ，{{ i.money }}元
+            {% endifequal %}
+        </div>
+    </div>
+
+    <div style="margin-left: 20px">
+        <!-- 删除按钮 -->
+        <button id="del{{i.id}}" class="je-btn je-bg-red je-rdu minibnt">×</button>
+
+        <!-- 删除对话框 -->
+        <div  id="delbox{{i.id}}"  class="delbox">
+            <div style="height: 50px">删除？</div>
+            <div class="x" style="justify-content: flex-end ">
+            <div id="yes{{i.id}}" class="boxbnt" >确定</div>
+            <div id="no{{i.id}}" class="boxbnt"  style="background: gainsboro; color: black">取消</div>
+            </div>
+        </div>
+
+        <!-- 删除的js -->
+        <script>
+        $("#del{{i.id}}").on("click",function() {
+            $("#delbox{{i.id}}").show();
+        })
+
+        $("#yes{{i.id}}").on("click",function() {
+             window.location.href='{% url '2019' %}?action=del&id={{ i.id }}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}';
+        })
+
+        $("#no{{i.id}}").on("click",function() {
+            $("#delbox{{i.id}}").hide();
+        })
+        </script>
+
+        <!-- 修改按钮 -->
+        <button id="edit{{i.id}}" class="je-btn je-bg-native je-rdu minibnt" style="font-size: 10px;">改</button>
+
+        <!-- 明天做 按钮  -->
+        <button id="tom_do{{i.id}}" class="je-btn je-bg-green je-rdu minibnt" style="font-size: 10px;margin:0 2px">明天做</button>
+
+        <!-- 存入待办 按钮  -->
+        <button id="todo{{i.id}}" class="je-btn je-bg-orange je-rdu minibnt" style="font-size: 10px;">入待办</button>
+
+        <!-- 修改的js -->
+        <script>
+        $("#todo{{i.id}}").on("click",function() {
+             window.location.href='{% url '2019' %}?action=todo&id={{ i.id }}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}';
+        })
+
+        $("#tom_do{{i.id}}").on("click",function() {
+             window.location.href='{% url '2019' %}?action=tom_do&id={{ i.id }}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}';
+        })
+
+        $("#edit{{i.id}}").click(function(){
+            $("#addform").slideUp();
+            $("#editform").slideDown();
+            $("#id").attr("value",{{ i.id }});
+            $("#new_start_time").attr("value",'{{ i.start_time| date:"Y-m-d\TH:i" }}');
+            $("#new_stop_time").attr("value",'{{ i.stop_time| date:"Y-m-d\TH:i" }}');
+            $("#new_work").attr("value",'{{ i.work }}');
+            $("#new_money").attr("value",{{ i.money }});
+            $("#new_remind_time").attr("value",'{{ i.remind_time| date:"Y-m-d\TH:i" }}');
+
+            {% ifequal i.if_important 1 %}
+                $('#new_if_important').bootstrapSwitch('setState', true);
+            {% else %}
+                $('#new_if_important').bootstrapSwitch('setState', false);
+            {% endifequal %}
+        });
+
+        $("#cancle_edit").click(function(){
+            $("#editform").slideUp();
+                $("#showcalendar").slideDown();
+        });
+        </script>
+    </div>
+</div>
+
+{% endfor %}
+<div class="m5">合计 {{ totalmoney }} 元</div>
+</div>
+
+
+{% for i in dairylist %}
+
+<h1 class="t show" style="color: green;border-color: green ">我的日记</h1>
+
+   <div class="other dairy" style="padding: 0 10px;margin-bottom: 10px">
+   {% ifnotequal i.audio '' %}
+       <audio src="{{ i.audio }}" controls style="width: 100%"></audio>
+   {% endifnotequal %}
+
+       {{ i.content| safe  }}</div>
+
+            <!-- 修改日记-->
+            <form id="editdairyform" class="editdairyform"  action="{% url "2019" %}?action=editdiary&fid={{ fid }}&mid={{ mid }}&year={{year}}&month={{month}}&tab={{tab}}&tag={{tag}}&ps={{ps}}&date={{date}}" style="display: none;margin-top: 20px" method="post"  enctype="multipart/form-data">
+              {% csrf_token %}
+
+                <div class="x sq m5 ycenter">
+                    <div>
+                        <button id="insert1" class="bg-red" type="button">插入“今日乐事”</button>
+                    </div>
+                    <div>
+                        <button id="score" class="bg-orange" type="button">打分</button>
+                    </div>
+                    <div>
+                         <input style="position:absolute;opacity:0;width: 60px;height:25px;cursor: pointer"  type="file" name="audio" accept="audio/*" capture="microphone">
+                         <img style="width: 60px;height: 25px" src="static/icon/record.png" >
+                    </div>
+<script>
+$("#insert1").click(function(){
+    editor.txt.append('<blockquote>今日乐事</blockquote><div style="margin-left: 35px"><ol><li><br></li></ol></div>')
+});
+$("#score").click(function(){
+    editor.txt.append('<p style="font-size: 15px;color: #FE935B;line-height: 25px;font-weight: bold" ><img style="margin-left: 5px" height="25px" width="25px" src="{% static 'icon/medal.png' %}" alt="">&ensp;今天表现棒棒哒，我给自己打9分！</p>')
+});
+</script>
+                </div>
+
+
+
+            <textarea id="text1" name="content" hidden></textarea>
+            <div id="editor1" style="width:100%;" ><p>{{ i.content| safe }}</p></div>
+            <script type="text/javascript" src="static/js/wangEditor.min.js"></script>
+            <script type="text/javascript">
+                var E = window.wangEditor
+                var editor = new E('#editor1')
+
+                // 配置服务器图片上传接口   uploadsimg
+                editor.customConfig.uploadImgServer = '/uploadsimg'
+
+                // 相当于表单里文件控件的 name='fileVal'
+                editor.customConfig.uploadFileName = 'fileVal'
+
+                editor.customConfig.zIndex = 0
+                // 自定义菜单配置
+                editor.customConfig.menus = [
+                'quote',  // 引用
+                'foreColor',  // 文字颜色
+                'fontSize',  // 字号
+                'bold',  // 粗体
+                'justify',  // 对齐方式
+                'redo',  // 重复
+                'list',  // 列表
+                'link',  // 插入链接
+                'table',  // 表格
+                'image',  // 插入图片
+                ]
+
+                var $text1 = $('#text1')
+                editor.customConfig.onchange = function (html) {
+                    // 监控变化，同步更新到 textarea
+                    $text1.val(html)
+                }
+                editor.create()
+                // 初始化 textarea 的值
+                $text1.val(editor.txt.html())
+            </script>
+
+            <div class="x xcenter">
+            <button style="margin: 10px 40px" type="button" class="je-btn je-bg-native" id="canceldairy">取消</button>
+            <button style="margin: 10px 40px" type="submit" class="je-btn je-bg-green" id="savedairy">保存</button>
+            </div>
+            </form>
+
+{% endfor %}
+
+{% endifequal %}
+
+{#月按钮#}
+<div class="show" style="display: flex;justify-content: center;margin-bottom: 10px">
+    <div >
+        <span id="showmonthlist"  class="je-btn je-bg-green je-rdu">{{ name }}的{{ month }}月</span>
+
+        {% ifequal mid mymid  %}
+            {% ifequal type '日程'  %}
+            <span id="showeditdiaryform" class="je-btn je-bg-red je-rdu" style="margin-left: 30px">写日记</span>
+            {% endifequal %}
+        {% endifequal %}
+
+    </div>
+
+</div>
+
+{#月清单#}
+<div id="monthlist" style=" {% ifnotequal show 'show'  %} display: none {% endifnotequal %}" >
+    {% for i in monthlist %}
+<div class="y">
+                <div class="x ycenter" >
+
+                <div id="check{{ i.id }}"  {% ifequal mid mymid  %} onclick="window.open('{% url '2019' %}?action=check&id={{i.id}}&fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date={{date}}&ps={{ ps }}&tag={{ tag }}&type={{ type }}&show=show','_self');"  {% endifequal %} >
+                    {% ifequal i.done False %}
+                     <i class="je-icon je-green je-f30" style="display: flex; align-items: center;">&#xe68f; <span style="color: grey;font-size: 15px;">{{ i.stop_time }}&ensp;{{ i.stop_time | week }}&ensp;</span></i>
+                     {% else %}
+                     <i class="je-icon je-green je-f30" style="display: flex; align-items: center;">&#xe690;<span style="color: grey;font-size: 15px;">{{ i.stop_time }}&ensp;{{ i.stop_time | week }}&ensp;</span></i>
+                     {% endifequal %}
+                </div>
+
+                </div>
+
+    <div class="x ycenter" style="line-height:20px;flex-flow: wrap;margin-left: 25px">
+
+                <div class="x">
+                    {% ifequal i.if_important 1 %}
+                    <i class='je-icon je-red je-f30'>&#xe612;</i>
+                    {% endifequal %}
+                     <span style="font-weight: bold;color: crimson">{{ i.work }}</span>，{{ i.money }}元
+                </div>
+
+    </div>
+</div>
+    {% endfor %}
+
+<div class="m5" style="margin-top: 30px">合计 {{ totalmoneymonth }} 元</div>
+
+</div>
+
+<!— bootstrapSwitch的JS文件-->
+<script src="{% static 'bootstrap/bootstrapSwitch.js' %}"></script>
+
+<script>
+$("#add").click(function(){
+    $("#addform").slideDown();
+    $(".show").slideUp();
+    $(".dairy").slideUp();
+});
+
+$("#showeditdiaryform").click(function(){
+        $("#monthlist").slideUp();
+        $(".show").slideUp();
+        $(".other").slideUp();
+        $("#editdairyform").slideDown();
+
+});
+
+$("#canceldairy").click(function(){
+    $("#monthlist").slideUp();
+    $(".other").slideDown();
+    $("#editdairyform").slideUp();
+    $(".show").slideDown();
+
+});
+
+
+$("#cancle").click(function(){
+    $("#addform").slideUp();
+    $(".show").slideDown();
+
+});
+
+$("#canclechangegoal").click(function(){
+    $("#changegoalform").slideUp();
+});
+
+$("#showcalendar").click(function(){
+    $("#show01").slideToggle();
+});
+
+$("#edit").click(function(){
+    $(".minibnt").slideToggle();
+});
+
+$("#showmonthlist").click(function(){
+    $("#monthlist").slideToggle();
+});
+
+</script>
+
+<!-- jeDate生成日历的js -->
+<script type="text/javascript">
+
+    //直接展示日历
+    jeDate("#show01",{
+        isShow:false,
+        festival: true,
+        format: "YYYY-MM-DD",
+        language:{
+        name  : "cn",
+        month : ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+        weeks : [ "日", "一", "二", "三", "四", "五", "六" ],
+        times : ["小时","分钟","秒数"],
+        titText: "请选择日期时间",
+        clear : "清空",
+        today : "今天",
+    },
+        onClose:false,
+        //marks给日期做标注，特别说明（日期不足2位的必须加0，如：'2015-1-3' 要写成 '2015-01-03' 否则标注不成功）
+        marks:{{ markdatelist | safe}},
+        donefun:function(obj) {
+            date = obj.val;
+            window.location.href = "{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab={{ tab }}&date="+date;
+        },
+    });
+
+</script>
+
+{% endifequal %}
+
+
+{% endblock %}
+
+<!— 底部导航  -->
+{% block tabbar %}
+
+
+<div class="tabbar x sq">
+
+    <div class="tabbaritem" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab=年&tag={{tag}}&ps={{ps}}&date={{date}}','_self');">
+          <div><img height="30px" width="30px" src="{% static 'icon/2019.png' %}" alt=""></div>
+    </div>
+
+    <div class="tabbaritem" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab=月&tag={{tag}}&ps={{ps}}&date={{date}}','_self');">
+          <div><img height="30px" width="30px" src="{% static 'icon/month.png' %}" alt=""></div>
+    </div>
+
+    <div class="tabbaritem" onclick="window.open('{% url '2019' %}?fid={{ fid }}&mid={{mid}}&year={{year}}&month={{month}}&tab=日&tag={{tag}}&ps={{ps}}&date={{date}}','_self');">
+          <div><img height="30px" width="30px" src="{% static 'icon/dairybook.png' %}" alt=""></div>
+    </div>
+
+
+{% if login2019 %}
+<!-- 登出-->
+    <div class="tabbaritem" onclick="window.open('{% url '2019' %}?login=logout','_self');">
+          <div><img height="30px" width="30px" src="{% static 'icon/logout.png' %}" alt=""></div>
+    </div>
+{% else %}
+    <div class="tabbaritem">
+          <div id="showlogin"><img height="30px" width="30px" src="{% static 'icon/key.png' %}" alt=""></div>
+    </div>
+{% endif %}
+
+</div>
+{% endblock %}
+
+<!— js  -->
+{% block myjs %}
+<script>
+window.onload=function(){
+    {% if hasmsg %}
+    $('.mask').fadeIn(300);
+    $('.doslogin').fadeIn(300);
+    {% endif %}
+}
+
+$('#showlogin').click(function(){
+    $('.mask').fadeIn(300);
+    $('.doslogin').fadeIn(300);
+    $('#password').focus();
+});
+
+$('#canclelogin').click(function(){
+    $('.mask').fadeOut(300);
+    $('.doslogin').fadeOut(300);
+});
+
+</script>
+{% endblock %}
+
+
